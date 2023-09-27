@@ -12,15 +12,13 @@ from secrets import SUDO_USERS
 
 
 def language_buttons(languages):
-    buttons = []
-
-    for language in languages:
-        buttons.append(InlineKeyboardButton(
-            languages[language], callback_data=f"chatlang_{language}"))
-
-    menu = [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
-
-    return menu
+    buttons = [
+        InlineKeyboardButton(
+            languages[language], callback_data=f"chatlang_{language}"
+        )
+        for language in languages
+    ]
+    return [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
 
 
 @il

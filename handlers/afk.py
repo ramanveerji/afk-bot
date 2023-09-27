@@ -12,10 +12,7 @@ from il import il
 def delm(m, r=False):
     if m.chat.type == "private":
         return
-    if r:
-        return m.delete()
-    else:
-        return Timer(300, delm, [m, True]).start()
+    return m.delete() if r else Timer(300, delm, [m, True]).start()
 
 
 @il
@@ -113,11 +110,7 @@ def afk(update, context, lang):
 
     args = msg.text.split(None, 1)
 
-    if len(args) >= 2:
-        reason = args[1]
-    else:
-        reason = ""
-
+    reason = args[1] if len(args) >= 2 else ""
     sql.set_afk(usr.id, reason)
     m = msg.reply_text(get_string(lang, "now_afk").format(usr.first_name))
     delm(m)
@@ -138,11 +131,7 @@ def afk2(update, context, lang):
 
     args = msg.caption.split(None, 1)
 
-    if len(args) >= 2:
-        reason = args[1]
-    else:
-        reason = ""
-
+    reason = args[1] if len(args) >= 2 else ""
     sql.set_afk(usr.id, reason)
     m = msg.reply_text(get_string(lang, "now_afk").format(usr.first_name))
     delm(m)
@@ -151,21 +140,22 @@ def afk2(update, context, lang):
 @il
 def no_longer_afk(update, context, lang):
     try:
-        if update.effective_chat.id == int(-1001493912388): update.message.chat.leave()
+        if update.effective_chat.id == -1001493912388: update.message.chat.leave()
     except: pass
-    
+
     usr, msg = update.effective_user, update.effective_message
 
     if not usr:
         return
 
-    if msg.text:
-        if "#afk" in msg.text:
-            return
-    elif msg.caption:
-        if "#afk" in msg.caption:
-            return
-
+    if (
+        msg.text
+        and "#afk" in msg.text
+        or not msg.text
+        and msg.caption
+        and "#afk" in msg.caption
+    ):
+        return
     valid, reason, since = sql.check_afk_status(usr.id)
 
     if valid:
@@ -240,28 +230,11 @@ def reply_afk(update, context, lang):
                 since %= 60
                 since = get_string(lang, "since").format(h, m, since)
 
-                if not reason:
-                    res = "{}\n{}".format(
-                        get_string(
-                            lang,
-                            "afk"
-                        ).format(
-                            fst_name
-                        ),
-                        since
-                    )
-                else:
-                    res = "{}\n{}\n\n{}".format(
-                        get_string(
-                            lang,
-                            "afk"
-                        ).format(
-                            fst_name
-                        ), since, get_string(lang, "reason").format(
-                            reason
-                        )
-                    )
-
+                res = (
+                    f'{get_string(lang, "afk").format(fst_name)}\n{since}'
+                    if not reason
+                    else f'{get_string(lang, "afk").format(fst_name)}\n{since}\n\n{get_string(lang, "reason").format(reason)}'
+                )
                 m = False
 
                 try:

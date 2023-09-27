@@ -10,9 +10,7 @@ def chats(wname=False):
             chat.chat_id for chat in sql.get_all_chats()
         ]
     else:
-        return [
-            chat for chat in sql.get_all_chats()
-        ]
+        return list(sql.get_all_chats())
 
 
 def get_user_id(username):
@@ -38,9 +36,7 @@ def get_user_id(username):
                     return userdat.id
 
             except BadRequest as excp:
-                if excp.message == "Chat not found":
-                    pass
-                else:
+                if excp.message != "Chat not found":
                     print("Error extracting user ID")
 
     return None

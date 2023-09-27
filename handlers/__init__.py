@@ -18,4 +18,4 @@ a = [
 all_handlers = []
 
 for i in a:
-    all_handlers += importlib.import_module("handlers." + i).__handlers__
+    all_handlers += importlib.import_module(f"handlers.{i}").__handlers__

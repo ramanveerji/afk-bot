@@ -19,26 +19,22 @@ def cleandb(update, context):
 
     for chat in chats:
         try:
-            
+
             context.bot.get_chat(chat)
-            
+
         except Unauthorized as excp:
-            
+
             if "kicked" in excp.message:
-                
+
                 try:
                     sql.del_chat(chat)
                     count += 1
-                    
+
                 except:
                     pass
-                
+
         except RetryAfter as excp:
-            msg.edit_text(
-                "Flood error, sleeping for {} seconds.".format(
-                    excp.retry_after
-                )
-            )
+            msg.edit_text(f"Flood error, sleeping for {excp.retry_after} seconds.")
             sleep(excp.retry_after)
 
     update.message.reply_text(
@@ -55,7 +51,7 @@ def broadcast(update, context):
     to_broadcast = " ".join(to_broadcast)
     to_broadcast = to_broadcast.strip().rstrip()
 
-    if len(to_broadcast) == 0:
+    if not to_broadcast:
         msg.reply_text(
             "Give me some text to broadcast."
         )
@@ -88,10 +84,7 @@ def chatlist(update, context):
     chatfile = "List of chat(s).\n"
 
     for chat in all_chats:
-        chatfile += "{} - ({})\n".format(
-            chat.chat_name,
-            chat.chat_id
-        )
+        chatfile += f"{chat.chat_name} - ({chat.chat_id})\n"
 
     with BytesIO(
         str.encode(
@@ -108,11 +101,7 @@ def chatlist(update, context):
 
 def stats(update, context):
     update.effective_message.reply_text(
-        "I have {} user(s) across {} chat(s).\n{} user(s) are currently AFK.".format(
-            sql.num_users(),
-            sql.num_chats(),
-            num_afk()
-        )
+        f"I have {sql.num_users()} user(s) across {sql.num_chats()} chat(s).\n{num_afk()} user(s) are currently AFK."
     )
 
 

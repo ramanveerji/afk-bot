@@ -19,11 +19,13 @@ class String:
         for filename in os.listdir(r"./strings"):
             if filename.endswith(".yaml"):
                 language_name = filename[:-5]
-                self.languages[language_name] = yaml.safe_load(open(r"./strings/" + filename, encoding="utf8"))
+                self.languages[language_name] = yaml.safe_load(
+                    open(f"./strings/{filename}", encoding="utf8")
+                )
 
     def new_strings(self, filename):
         try:
-            new_language = yaml.safe_load(open(r"./strings/" + filename))
+            new_language = yaml.safe_load(open(f"./strings/{filename}"))
         except yaml.YAMLError as exc:
             return {"error": exc}
         if filename[:-5] == "en":
@@ -46,9 +48,9 @@ class String:
                         pop_string = True
                     if pop_string:
                         for language in self.languages:
-                            if not language == "en":
+                            if language != "en":
                                 self.languages[language].pop(string, None)
-                                with open(r"./strings/" + language + ".yaml", 'w') as outfile:
+                                with open(f"./strings/{language}.yaml", 'w') as outfile:
                                     yaml.dump(self.languages[language], outfile, default_flow_style=False,
                                               sort_keys=False)
                 except KeyError:
@@ -75,16 +77,16 @@ class String:
                     missing_arguments.append(string)
                     new_language.pop(string, None)
         if missing_arguments:
-            with open(r"./strings/" + filename, 'w') as outfile:
+            with open(f"./strings/{filename}", 'w') as outfile:
                 yaml.dump(new_language, outfile, default_flow_style=False, sort_keys=False)
         self.reload_strings()
         return {"missing_arguments": missing_arguments, "missing_strings": missing_strings}
 
     def get_languages(self):
-        to_return = {}
-        for language in self.languages:
-            to_return[language] = self.languages[language]["language"]
-        return to_return
+        return {
+            language: self.languages[language]["language"]
+            for language in self.languages
+        }
 
     def get_language(self, language):
         return self.languages[language]["language"]

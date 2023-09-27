@@ -21,25 +21,18 @@ def start(update, context, lang):
             )
         else:
             msg.reply_text(
-                get_string(
-                    lang,
-                    "start"
-                ) + "\n語 أ Ñ Ê ێ ツ » /lang",
+                get_string(lang, "start") + "\n語 أ Ñ Ê ێ ツ » /lang",
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton(
-                                get_string(
-                                    lang,
-                                    "add_me"
-                                ),
-                                url="http://t.me/{}?startgroup=lang_{}".format(
-                                    context.bot.username, lang)
+                                get_string(lang, "add_me"),
+                                url=f"http://t.me/{context.bot.username}?startgroup=lang_{lang}",
                             )
                         ]
                     ]
                 ),
-                parse_mode="HTML"
+                parse_mode="HTML",
             )
     else:
         if "lang" in msg.text:
@@ -70,25 +63,17 @@ def help(update, context, lang):
         )
     else:
         msg.reply_text(
-            get_string(
-                lang,
-                "help_pm"
-            ),
+            get_string(lang, "help_pm"),
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(
-                            get_string(
-                                lang,
-                                "help_word"
-                            ),
-                            url="http://t.me/{}?start=help".format(
-                                context.bot.username
-                            )
+                            get_string(lang, "help_word"),
+                            url=f"http://t.me/{context.bot.username}?start=help",
                         )
                     ]
                 ]
-            )
+            ),
         )
 
 

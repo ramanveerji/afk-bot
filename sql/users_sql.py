@@ -41,26 +41,24 @@ def ensure_bot_in_db():
 
 def update_user(user_id, username, chat_id=None, chat_name=None):
     with INSERTION_LOCK:
-        user = SESSION.query(Users).get(user_id)
-        if not user:
+        if user := SESSION.query(Users).get(user_id):
+            user.username = username
+
+        else:
             user = Users(user_id, username)
             SESSION.add(user)
             SESSION.flush()
-        else:
-            user.username = username
-
         if not chat_id or not chat_name:
             SESSION.commit()
             return
 
-        chat = SESSION.query(Chats).get(str(chat_id))
-        if not chat:
+        if chat := SESSION.query(Chats).get(str(chat_id)):
+            chat.chat_name = chat_name
+
+        else:
             chat = Chats(str(chat_id), chat_name)
             SESSION.add(chat)
             SESSION.flush()
-
-        else:
-            chat.chat_name = chat_name
 
         SESSION.commit()
 
@@ -105,8 +103,7 @@ ensure_bot_in_db()
 
 def del_user(user_id):
     with INSERTION_LOCK:
-        curr = SESSION.query(Users).get(user_id)
-        if curr:
+        if curr := SESSION.query(Users).get(user_id):
             SESSION.delete(curr)
             SESSION.commit()
             return True
@@ -118,8 +115,7 @@ def del_user(user_id):
 
 def del_chat(chat_id):
     with INSERTION_LOCK:
-        curr = SESSION.query(Chats).get(chat_id)
-        if curr:
+        if curr := SESSION.query(Chats).get(chat_id):
             SESSION.delete(curr)
             SESSION.commit()
             return True
