@@ -54,8 +54,7 @@ def set_afk(user_id, reason=None):
 
 
 def rm_afk(user_id):
-    curr = SESSION.query(AFK).get(user_id)
-    if curr:
+    if curr := SESSION.query(AFK).get(user_id):
         if user_id in AFK_USERS:
             del AFK_USERS[user_id]
             SESSION.delete(curr)
