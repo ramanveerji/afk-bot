@@ -7,6 +7,8 @@ RUN apt install curl
 
 # Updating Pip Packages
 RUN pip3 install -U pip
+RUN apt-get update && apt-get install -y libffi-dev libssl-dev
+
 
 # Copying Requirements
 COPY requirements.txt /requirements.txt
