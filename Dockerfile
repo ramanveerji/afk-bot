@@ -2,7 +2,9 @@ FROM python:latest
 
 # Installing Packages
 RUN apt update && apt upgrade -y
-RUN apt install git curl python3-pip
+RUN apt install git
+RUN apt install curl
+RUN apt install python3-pip
 
 # Updating Pip Packages
 RUN pip3 install -U pip
