@@ -1,18 +1,13 @@
 import os
-from decouple import config
 
-# Load variables from the .env file
-BOT_TOKEN = config('TOKEN')
-DB_URI = config('DATABASE_URL')
-SUDO_USERS = config('SUDO_USERS').split(',')  # Split the comma-separated values into a list
-LOG_CHAT = config('LOG_CHAT')
-
-# Check if the required variables are defined
-if not BOT_TOKEN or not DB_URI:
-    print("Please specify TOKEN and DATABASE_URL environment variables in the .env file.")
+if not os.environ.get("TOKEN") or not os.environ.get("DATABASE_URL"):
+    print("Please specify TOKEN and DATABASE_URL environment variables before starting the bot.")
     exit()
 
-# Now, you can use these variables in your script as before
 from telegram.ext import Filters
 
+BOT_TOKEN = os.environ.get("TOKEN")
+DB_URI = os.environ.get("DATABASE_URL")
+SUDO_USERS = os.environ.get("SUDO_USERS")
 SUDO = Filters.user(SUDO_USERS)
+LOG_CHAT = os.environ.get("LOG_CHAT")
