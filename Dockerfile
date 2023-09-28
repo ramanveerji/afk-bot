@@ -13,7 +13,7 @@ COPY requirements.txt /requirements.txt
 
 # Installing Requirements
 RUN cd /
-RUN pip3 install -U -r requirements.txt
+RUN pip3 install --no-cache-dir -U -r requirements.txt
 RUN mkdir /afkbot
 WORKDIR /afkbot
 COPY start.sh /start.sh
